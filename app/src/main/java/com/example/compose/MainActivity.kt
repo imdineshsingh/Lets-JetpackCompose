@@ -7,6 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -20,12 +22,21 @@ import androidx.compose.ui.unit.dp
 import com.example.compose.ui.theme.ComposeTheme
 
 class MainActivity : ComponentActivity() {
+    val conversationList= listOf(
+        Message("Abhi","The Quick Brown Fox"),
+        Message("Dinesh","The Quick Brown Fox"),
+        Message("Ganesh","The Quick Brown Fox"))
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeTheme {
-                MessageCard(msg = Message("Android ", "Jetpack Compose"))
+                Column {
+                    MessageCard(msg = Message("Jetpack Compose ", "single Card"))
+                    Conversation(messages = conversationList)
+                }
             }
+
         }
     }
 
@@ -49,7 +60,6 @@ class MainActivity : ComponentActivity() {
             Spacer(modifier = Modifier.width(8.dp))
             Column {
                 Text(
-
                     text = msg.author,
                     color = MaterialTheme.colors.secondaryVariant,
                     style = MaterialTheme.typography.body2
@@ -81,4 +91,24 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @Composable
+    fun Conversation(messages: List<Message>) {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+           items(messages){ message->
+               MessageCard(msg = message)
+
+           }
+        }
+    }
+
+    @Preview
+    @Composable
+    fun PreviewConversation(){
+        ComposeTheme {
+            Conversation(messages = conversationList)
+        }
+    }
 }
